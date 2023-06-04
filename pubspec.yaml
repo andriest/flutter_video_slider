@@ -10,8 +10,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  ffmpeg_kit_flutter_min_gpl: ^5.1.0
   video_player: ^2.6.1
   video_thumbnail: ^0.5.3
+  path_provider: ^2.0.12
 
 dev_dependencies:
   flutter_test:

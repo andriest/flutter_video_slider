@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
@@ -33,9 +34,12 @@ class _PickerPageState extends State<PickerPage> {
       body: Center(
         child: ElevatedButton(
           onPressed: () async {
-            final assets = await FilePicker.platform.pickFiles(type: FileType.video);
+            final assets =
+                await FilePicker.platform.pickFiles(type: FileType.video);
             if (assets != null) {
-              final controller = VideoEditorController.file(File(assets.files.single.path!));
+              log('message ::: assets :: ${assets.files.single.path}');
+              final controller =
+                  VideoEditorController.file(File(assets.files.single.path!));
               Navigator.push(
                 context,
                 MaterialPageRoute<bool>(
@@ -105,9 +109,11 @@ class _AppPageState extends State<AppPage> {
               Align(
                 alignment: Alignment.center,
                 child: ElevatedButton(
-                  child: Text('Print start position time and end position time.'),
+                  child:
+                      Text('Print start position time and end position time.'),
                   onPressed: () {
-                    final duration = widget.controller.video.value.duration.inSeconds;
+                    final duration =
+                        widget.controller.video.value.duration.inSeconds;
                     final start = widget.controller.minTrim * duration;
                     final end = widget.controller.maxTrim * duration;
                     setState(() {
@@ -135,7 +141,7 @@ class _AppPageState extends State<AppPage> {
                         child: VideoSlider(
                           controller: widget.controller,
                           height: 60,
-                          maxDuration: const Duration(seconds: 15),
+                          maxDuration: const Duration(minutes: 15),
                         ),
                       ),
                     ],
