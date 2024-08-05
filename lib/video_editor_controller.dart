@@ -45,6 +45,7 @@ class VideoEditorController extends ChangeNotifier {
   final File file;
 
   String get _trimCmd => '-ss $_trimStart -to $_trimEnd';
+  String get trimCmd => '-ss $_trimStart -to $_trimEnd';
 
   Duration get trimmedDuration => _trimEnd - _trimStart;
 
@@ -151,6 +152,22 @@ class VideoEditorController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void initTrim(Duration durationStart, Duration durationEnd) {
+    _trimStart = durationStart;
+    _trimEnd = durationEnd;
+    notifyListeners();
+  }
+
+  void setTrimStart(Duration duration) {
+    _trimStart = duration;
+    notifyListeners();
+  }
+
+  void setTrimEnd(Duration duration) {
+    _trimEnd = duration;
+    notifyListeners();
+  }
+
   Future<String> _getOutputPath({
     required String filePath,
     String? name,
@@ -161,6 +178,12 @@ class VideoEditorController extends ChangeNotifier {
     name ??= path.basenameWithoutExtension(filePath);
     final epoch = DateTime.now().millisecondsSinceEpoch;
     return '$tempPath/${name}_$epoch.${format.extension}';
+  }
+
+  static Future<void> deleteAllCache({String? outputDirectory}) async {
+    final tempPath = outputDirectory ?? (await getTemporaryDirectory()).path;
+    final directory = Directory(tempPath);
+    directory.deleteSync(recursive: true);
   }
 
   Future<void> exportVideo({
