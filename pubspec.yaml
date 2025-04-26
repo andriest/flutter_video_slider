@@ -10,7 +10,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  ffmpeg_kit_flutter_min_gpl: ^5.1.0
+  # ffmpeg_kit_flutter_min_gpl: ^5.1.0
+  ffmpeg_kit_flutter:
+    git:
+      url: git@github.com:carl-designlibro/ffmpeg-kit.git
+      path: flutter/flutter
+      # ref: flutter_fix_retired_v6.0.3  # For version 6.0.3
+      ref: flutter_fix_retired_v5.1.0 # For version 5.1.0
   video_player: ^2.6.1
   video_thumbnail: ^0.5.3
   path_provider: ^2.0.12

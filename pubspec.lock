@@ -65,13 +65,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.2"
-  ffmpeg_kit_flutter_min_gpl:
+  ffmpeg_kit_flutter:
     dependency: "direct main"
     description:
-      name: ffmpeg_kit_flutter_min_gpl
-      sha256: ca3dc2330c176c8ef96fb512e7a1a37ab369e15685d2e72a52ec1d50726360a0
-      url: "https://pub.dev"
-    source: hosted
+      path: "flutter/flutter"
+      ref: "flutter_fix_retired_v5.1.0"
+      resolved-ref: aa6f4423f2de93e4e06cf8a5431771ed2b9ce0d5
+      url: "git@github.com:carl-designlibro/ffmpeg-kit.git"
+    source: git
     version: "5.1.0"
   ffmpeg_kit_flutter_platform_interface:
     dependency: transitive
