@@ -1,30 +1,24 @@
 name: video_slider
 description: A simple slider of video to trim by specific area.
-version: 0.0.2
+version: 1.0.0
 homepage: https://github.com/YuheiNakasaka/flutter_video_slider
 
 environment:
-  sdk: ">=2.19.6 <3.0.0"
-  flutter: ">=3.0.0"
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.24.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  # ffmpeg_kit_flutter_min_gpl: ^5.1.0
-  ffmpeg_kit_flutter_new: ^3.2.0
-    # git:
-    #   url: https://github.com/carl-designlibro/ffmpeg-kit.git
-    #   path: flutter/flutter
-    #   ref: flutter_fix_retired_v6.0.3  # For version 6.0.3
-      # ref: flutter_fix_retired_v5.1.0 # For version 5.1.0
-  video_player: ^2.6.1
+  ffmpeg_kit_flutter_new: ^4.1.0
+  video_player: ^2.9.2
   video_thumbnail: ^0.5.6
-  path_provider: ^2.0.12
+  path_provider: ^2.1.4
+  path: ^1.9.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  pedantic:
-  pedantic_mono:
+  flutter_lints: ^4.0.0
 
 flutter:

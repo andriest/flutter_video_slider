@@ -34,17 +34,25 @@ class _PickerPageState extends State<PickerPage> {
       body: Center(
         child: ElevatedButton(
           onPressed: () async {
-            final assets =
-                await FilePicker.platform.pickFiles(type: FileType.video);
-            if (assets != null) {
-              log('message ::: assets :: ${assets.files.single.path}');
-              final controller =
-                  VideoEditorController.file(File(assets.files.single.path!));
-              Navigator.push(
-                context,
-                MaterialPageRoute<bool>(
-                  builder: (_) => AppPage(controller),
-                ),
+            try {
+              final assets = await FilePicker.platform.pickFiles(type: FileType.video);
+              if (assets != null && assets.files.isNotEmpty) {
+                final filePath = assets.files.first.path;
+                if (filePath != null) {
+                  log('message ::: assets :: $filePath');
+                  final controller = VideoEditorController.file(File(filePath));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<bool>(
+                      builder: (_) => AppPage(controller),
+                    ),
+                  );
+                }
+              }
+            } catch (e) {
+              log('Error picking file: $e');
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Error picking file: $e')),
               );
             }
           },
@@ -66,6 +74,7 @@ class AppPage extends StatefulWidget {
 
 class _AppPageState extends State<AppPage> {
   String _positionText = 'Start: \nEnd: ';
+  bool _isExporting = false;
 
   @override
   void initState() {
@@ -74,15 +83,63 @@ class _AppPageState extends State<AppPage> {
   }
 
   Future<void> _init() async {
-    await widget.controller.initialize();
-    widget.controller.video.play();
-    setState(() {});
+    try {
+      await widget.controller.initialize();
+      widget.controller.video.play();
+      setState(() {});
+    } catch (e) {
+      log('Error initializing video: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error initializing video: $e')),
+      );
+    }
   }
 
   @override
   void dispose() {
     widget.controller.dispose();
     super.dispose();
+  }
+
+  Future<void> _exportVideo() async {
+    if (_isExporting) return;
+    
+    setState(() {
+      _isExporting = true;
+    });
+
+    try {
+      await widget.controller.exportVideo(
+        onCompleted: (File file) {
+          setState(() {
+            _isExporting = false;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Video exported successfully: ${file.path}')),
+          );
+        },
+        onError: (error, stackTrace) {
+          setState(() {
+            _isExporting = false;
+          });
+          log('Export error: $error');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Export failed: $error')),
+          );
+        },
+        onProgress: (stats, progress) {
+          log('Export progress: ${(progress * 100).toStringAsFixed(1)}%');
+        },
+      );
+    } catch (e) {
+      setState(() {
+        _isExporting = false;
+      });
+      log('Export error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Export failed: $e')),
+      );
+    }
   }
 
   @override
@@ -108,18 +165,29 @@ class _AppPageState extends State<AppPage> {
               ),
               Align(
                 alignment: Alignment.center,
-                child: ElevatedButton(
-                  child:
-                      Text('Print start position time and end position time.'),
-                  onPressed: () {
-                    final duration =
-                        widget.controller.video.value.duration.inSeconds;
-                    final start = widget.controller.minTrim * duration;
-                    final end = widget.controller.maxTrim * duration;
-                    setState(() {
-                      _positionText = 'Start: $start\nEnd: $end';
-                    });
-                  },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ElevatedButton(
+                      child: Text('Print start position time and end position time.'),
+                      onPressed: () {
+                        final duration =
+                            widget.controller.video.value.duration.inSeconds;
+                        final start = widget.controller.minTrim * duration;
+                        final end = widget.controller.maxTrim * duration;
+                        setState(() {
+                          _positionText = 'Start: $start\nEnd: $end';
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: _isExporting ? null : _exportVideo,
+                      child: _isExporting 
+                          ? const CircularProgressIndicator()
+                          : const Text('Export Video'),
+                    ),
+                  ],
                 ),
               ),
               if (widget.controller.video.value.isInitialized)

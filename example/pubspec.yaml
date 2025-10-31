@@ -4,7 +4,8 @@ publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.19.6 <3.0.0"
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.24.0"
 
 dependencies:
   flutter:
@@ -13,9 +14,9 @@ dependencies:
   video_slider:
     path: ../
 
-  cupertino_icons: ^1.0.5
-  video_player: ^2.6.1
-  file_picker: ^3.0.3
+  cupertino_icons: ^1.0.8
+  video_player: ^2.9.2
+  file_picker: ^8.1.2
 
 dev_dependencies:
   flutter_test:
